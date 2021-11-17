@@ -1,0 +1,23 @@
+{
+  "name": "youtube-project",
+  "version": "1.0.0",
+  "description": "To make an API to fetch latest videos sorted in reverse chronological order of their publishing date-time from YouTube for a given tag/search query in a paginated response.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon node index.js"
+  },
+  "author": "Haripriya Baskaran",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.0.12",
+    "node-cron": "^3.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
