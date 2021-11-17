@@ -69,8 +69,10 @@ cron.schedule("*/10 * * * * *", async function () {
       url: `https://www.googleapis.com/youtube/v3/search?key=${API_KEY[index]}&q=${PRE_DEFINED_SEARCH_QUERY}&type=video&order=date&part=snippet&maxResults=20&publishedAfter=${dateTime}`,
     };
     const response = await axios(requestConfig);
-    if(response.status === 403) { 
+    if(response.status === 403 && index<API_KEY.length) { 
       index+=1;
+    } else{
+      process.exit("Sorry api limit reached. Create new Api keys and add it to the API_KEY list");
     }
     const result = [];
     response.data.items.forEach((item) => {
