@@ -67,7 +67,7 @@ cron.schedule("*/20 * * * * *", async function () {
     console.log(dateTime);
     const requestConfig = {
       method: "get",
-      url: `${config.GOOGLE_URL}?key=${API_KEY[index]}&q=${PRE_DEFINED_SEARCH_QUERY}&type=video&order=date&part=snippet&maxResults=20&publishedAfter=${dateTime}`,
+      url: `${config.GOOGLE_URL}?key=${API_KEY[index]}&q=${PRE_DEFINED_SEARCH_QUERY}&type=video&order=date&part=snippet&maxResults=50&publishedAfter=${dateTime}`,
     };
     const response = await axios(requestConfig);
     if (response.status === 403) {
