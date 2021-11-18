@@ -4,8 +4,9 @@ const _ = require("lodash");
 const { Video } = require("./video");
 const router = express.Router();
 const cron = require("node-cron");
+const config = require("../config");
 
-const API_KEY = ["AIzaSyBUxqgDmPpRJOaorXnZG6ZqllYC28rOT1g", "AIzaSyDPlXBTam40zDJtDsLeQeHV_yYE_YUf7cg", "AIzaSyByWAeeERf_mhsQZurN7SHpc57l-M3hZao"];
+const API_KEY = config.KEYS;
 let index = 0;
 const PRE_DEFINED_SEARCH_QUERY = "Goa";
 
@@ -14,7 +15,7 @@ router.get("/videos-by-query", async (req, res) => {
     const searchQuery = req.query.q.toLowerCase();
     const requestConfig = {
       method: "get",
-      url: `https://www.googleapis.com/youtube/v3/search?key=${API_KEY[index]}&q=${searchQuery}&part=snippet&maxResults=20`,
+      url: `${config.GOOGLE_URL}?key=${API_KEY[index]}&q=${searchQuery}&part=snippet&maxResults=20`,
     };
     const response = await axios(requestConfig);
     const result = [];
@@ -56,7 +57,7 @@ router.get("/saved-videos", async (req, res) => {
   }
 });
 
-cron.schedule("*/10 * * * * *", async function () {
+cron.schedule("*/20 * * * * *", async function () {
   try {
     const soFarFetched = await Video.findOne({}).sort({ publishedAt: -1 });
     let dateTime = new Date("January 01, 2020 00:00:01").toISOString(); //Default
@@ -66,13 +67,17 @@ cron.schedule("*/10 * * * * *", async function () {
     console.log(dateTime);
     const requestConfig = {
       method: "get",
-      url: `https://www.googleapis.com/youtube/v3/search?key=${API_KEY[index]}&q=${PRE_DEFINED_SEARCH_QUERY}&type=video&order=date&part=snippet&maxResults=20&publishedAfter=${dateTime}`,
+      url: `${config.GOOGLE_URL}?key=${API_KEY[index]}&q=${PRE_DEFINED_SEARCH_QUERY}&type=video&order=date&part=snippet&maxResults=20&publishedAfter=${dateTime}`,
     };
     const response = await axios(requestConfig);
-    if(response.status === 403 && index<API_KEY.length) { 
-      index+=1;
-    } else{
-      process.exit("Sorry api limit reached. Create new Api keys and add it to the API_KEY list");
+    if (response.status === 403) {
+      if (index < API_KEY.length) {
+        index += 1;
+      } else {
+        process.exit(
+          "Sorry api limit reached. Create new Api keys and add it to the API_KEY list"
+        );
+      }
     }
     const result = [];
     response.data.items.forEach((item) => {

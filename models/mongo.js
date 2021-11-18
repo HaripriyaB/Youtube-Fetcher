@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const uri = "mongodb://localhost:27017";
+const config = require('../config');
 
-mongoose.connect(uri + "/youtube_videos", {
+mongoose.connect(config.MONGODB.URL + "/youtube_videos", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
